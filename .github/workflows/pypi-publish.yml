@@ -12,6 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: hynek/build-and-inspect-python-package@v2
+        with:
+          path: packages/hello_numpy
 
   distlong:
     runs-on: ubuntu-latest
@@ -21,7 +23,7 @@ jobs:
           fetch-depth: 0
 
       - name: Build SDist and wheel
-        run: pipx run build
+        run: pipx run build packages/hello_numpy
 
       - uses: actions/upload-artifact@v4
         with:
