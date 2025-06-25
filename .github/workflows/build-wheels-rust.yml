@@ -1,0 +1,52 @@
+name: Build Rust Extension Wheels
+
+# Builds wheels for Python packages with Rust extensions
+# Uses cibuildwheel for cross-platform managers
+
+on:
+  push:
+    tags: ['rust-v*']
+  workflow_dispatch:
+
+jobs:
+  build-wheels:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: dtolnay/rust-toolchain@stable
+    
+    - uses: pypa/cibuildwheel@v2.21
+      with:
+        package-dir: ./managers/hello_rust
+      env:
+        CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
+        CIBW_SKIP: "*-win32 pp*"
+        CIBW_BUILD_FRONTEND: "build[uv]"
+        CIBW_TEST_COMMAND: "python -c 'from hello_rust import hello_from_rust; print(hello_from_rust(\"test\"))'"
+    
+    - uses: actions/upload-artifact@v4
+      with:
+        name: wheels-${{ matrix.os }}
+        path: ./wheelhouse/*.whl
+
+  publish:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build-wheels
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        pattern: wheels-*
+        merge-multiple: true
+        path: dist/
+    
+    - uses: pypa/gh-action-pypi-publish@release/v1
+      if: false  # HACK for tutorial purposes, remove in real use
