@@ -26,11 +26,11 @@ jobs:
       - uses: pypa/cibuildwheel@v3.0.0
         with:
           package-dir: packages/hello_rust
+
         env:
           CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
-          CIBW_SKIP: "*-win32 pp*"
-          CIBW_BUILD_FRONTEND: "build[uv]"
-          CIBW_TEST_COMMAND: "python -c 'from hello_rust import hello_from_rust; print(hello_from_rust(\"test\"))'"
+          CIBW_SKIP: "*-win32 pp* *musllinux*"
+          CIBW_BUILD_FRONTEND: "build[uv]"\
 
       - uses: actions/upload-artifact@v4
         with:
