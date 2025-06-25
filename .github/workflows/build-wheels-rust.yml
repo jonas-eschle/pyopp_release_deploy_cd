@@ -20,7 +20,7 @@ jobs:
     
     - uses: dtolnay/rust-toolchain@stable
     
-    - uses: pypa/cibuildwheel@v3
+    - uses: pypa/cibuildwheel@v2.21
       with:
         package-dir: packages/hello_rust
       env:
