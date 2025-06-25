@@ -92,9 +92,9 @@ jobs:
           python -c "import ${{ env.PACKAGE_NAME }}; print('✅ Package imported successfully')"
           
           # Test CLI if it exists
-          if command -v hello-numpy &> /dev/null; then
-            hello-numpy --help
-            hello-numpy --size 5 --seed 42
+          if command -v hello_numpy &> /dev/null; then
+            hello_numpy --help
+            hello_numpy --size 5 --seed 42
           fi
 
       - name: Upload to anaconda.org  # HACK below, don't use, it's a tutorial

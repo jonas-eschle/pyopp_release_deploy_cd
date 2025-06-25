@@ -1,0 +1,43 @@
+{% set name = "hello_numpy" %}
+{% set version = "0.1.0" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: file:///home/jonas/Documents/software/schools/pyopp_aachen_cd/managers/conda/hello_numpy/dist/hello_numpy-0.1.0.tar.gz
+  sha256: e819ccf7674970044ef8915d13e97a45d74ea6cfdf161bdcf15d0d62cd561c28
+
+build:
+  entry_points:
+    - hello_numpy = hello_numpy.hello:main
+  noarch: python
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
+  number: 0
+
+requirements:
+  host:
+    - python >=3.10
+    - hatchling
+    - pip
+  run:
+    - python >=3.10
+    - numpy >=2.0.0
+
+test:
+  imports:
+    - hello_numpy
+  commands:
+    - pip check
+    - hello-numpy --help
+  requires:
+    - pip
+
+about:
+  summary: A simple hello world package with numpy
+  license: MIT
+
+extra:
+  recipe-maintainers:
+    - jonas-eschle

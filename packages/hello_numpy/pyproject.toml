@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "hello-numpy"
+name = "hello_numpy"
 version = "0.1.0"
 description = "A simple hello world package with numpy"
 readme = "README.md"
