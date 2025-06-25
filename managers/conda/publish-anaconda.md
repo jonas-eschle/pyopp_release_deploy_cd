@@ -4,7 +4,6 @@
 
 1. **Create anaconda.org account** at https://anaconda.org
 2. **Generate API token** in your account settings
-3. **Add GitHub Secrets** to your repository
 
 ## GitHub Secrets Setup
 
