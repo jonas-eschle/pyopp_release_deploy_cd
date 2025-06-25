@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hello-numpy"
+version = "0.1.0"
+description = "A simple hello world package with numpy"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    { name = "Example Author", email = "author@example.com" },
+]
+dependencies = [
+    "numpy>=2.0.0",
+]
+
+[project.scripts]
+hello-numpy = "hello_numpy.hello:main"
