@@ -27,9 +27,9 @@ Before using the automated workflow, test locally:
 
 ```bash
 # Install conda-build
-mamba install conda-build anaconda-client
+mamba install conda-build anaconda-client boa conda-verify
 
-conda build hello-numpy/ --output-folder dist/conda  # needs conda, not mamba
+conda mambabuild hello-numpy/ --output-folder dist/conda  # needs boa, otherwise replace mambabuild -> build
 
 # Test local installation
 mamba install --use-local hello-numpy
