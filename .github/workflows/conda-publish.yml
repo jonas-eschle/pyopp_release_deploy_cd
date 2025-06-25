@@ -42,53 +42,57 @@ jobs:
           mamba install -y conda-build boa anaconda-client conda-verify grayskull
 
 
-      - name: Prepare package source
+      - name: Prepare package source and recipe
         shell: bash -l {0}
         run: |
-          # Create source distribution if it doesn't exist
+          # Create source distribution from the package
           cd packages/${{ env.PACKAGE_NAME }}
           python -m pip install build
           python -m build --sdist
           
-          # Copy source to conda build directory
-          cp -r . ../../managers/conda/${{ env.PACKAGE_NAME }}/
-
-      - name: Update meta.yaml with correct paths
-        shell: bash -l {0}
-        working-directory: ./managers/conda/${{ env.PACKAGE_NAME }}
-        run: |
-          # Check if meta.yaml exists
-          if [ ! -f meta.yaml ]; then
-            echo "ERROR: meta.yaml not found in $(pwd)"
-            ls -la
-            exit 1
-          fi
+          # Create a temporary conda build directory
+          mkdir -p /tmp/conda-build/${{ env.PACKAGE_NAME }}
+          cd /tmp/conda-build/${{ env.PACKAGE_NAME }}
           
-          # Update the source path to use local directory instead of file URL
-          sed -i.bak 's|url: file://.*|path: .|g' meta.yaml || true
+          # Copy the existing meta.yaml template
+          cp -f $GITHUB_WORKSPACE/managers/conda/${{ env.PACKAGE_NAME }}/meta.yaml .
           
-          # Remove sha256 for local builds
-          sed -i.bak '/sha256:/d' meta.yaml || true
+          # Copy the package source files
+          cp -r $GITHUB_WORKSPACE/packages/${{ env.PACKAGE_NAME }}/* .
           
-          # Show the updated meta.yaml
-          echo "Updated meta.yaml:"
+          # Update meta.yaml to use local path instead of file URL
+          sed -i.bak 's|url: file://.*|path: .|g' meta.yaml
+          sed -i.bak '/sha256:/d' meta.yaml
+          
+          # Show the updated meta.yaml and directory structure
+          echo "=== Updated meta.yaml ==="
           cat meta.yaml
+          echo "=== Directory structure ==="
+          ls -la
+          
+          # Store the build directory for next steps
+          echo "CONDA_BUILD_DIR=/tmp/conda-build/${{ env.PACKAGE_NAME }}" >> $GITHUB_ENV
 
       - name: Build conda package with mamba
         shell: bash -l {0}
-        working-directory: ./managers/conda/${{ env.PACKAGE_NAME }}
         run: |
+          # Change to our prepared build directory
+          cd $CONDA_BUILD_DIR
+          
           # Verify we have a valid recipe
           echo "Current directory: $(pwd)"
           echo "Contents:"
           ls -la
           
+          # Create output directory
+          mkdir -p $GITHUB_WORKSPACE/managers/conda/dist
+          
           # Build using conda-mambabuild (faster)
-          conda mambabuild . -c conda-forge --output-folder ../dist --no-anaconda-upload
+          conda mambabuild . -c conda-forge --output-folder $GITHUB_WORKSPACE/managers/conda/dist --no-anaconda-upload
           
           # List built packages
           echo "Built packages:"
-          find ../dist -name "*.tar.bz2" -o -name "*.conda" | sort
+          find $GITHUB_WORKSPACE/managers/conda/dist -name "*.tar.bz2" -o -name "*.conda" | sort
 
       - name: Test conda package locally
         shell: bash -l {0}
@@ -105,9 +109,9 @@ jobs:
           python -c "import ${{ env.PACKAGE_NAME }}; print('✅ Package imported successfully')"
           
           # Test CLI if it exists
-          if command -v hello_numpy &> /dev/null; then
-            hello_numpy --help
-            hello_numpy --size 5 --seed 42
+          if command -v hello-numpy &> /dev/null; then
+            hello-numpy --help
+            hello-numpy --size 5 --seed 42
           fi
 
       - name: Upload to anaconda.org  # HACK below, don't use, it's a tutorial
