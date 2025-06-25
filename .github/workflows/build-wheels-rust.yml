@@ -22,7 +22,7 @@ jobs:
     
     - uses: pypa/cibuildwheel@v2.21
       with:
-        package-dir: ./managers/hello_rust
+        package-dir: ./packages/hello_rust
       env:
         CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
         CIBW_SKIP: "*-win32 pp*"
