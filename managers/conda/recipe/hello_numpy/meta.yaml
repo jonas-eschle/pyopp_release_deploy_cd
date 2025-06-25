@@ -11,7 +11,7 @@ source:
 
 build:
   entry_points:
-    - hello-numpy = hello_numpy.hello:main
+    - hello_numpy = hello_numpy.hello:main
   noarch: python
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   number: 0
@@ -30,7 +30,7 @@ test:
     - hello_numpy
   commands:
     - pip check
-    - hello-numpy --help
+    - hello_numpy --help
   requires:
     - pip
 

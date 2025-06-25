@@ -62,7 +62,7 @@ jobs:
           cd /tmp/conda-build/${{ env.PACKAGE_NAME }}
 
           # Copy pre-configured meta.yaml template
-          cp -f $GITHUB_WORKSPACE/managers/conda/${{ env.PACKAGE_NAME }}/meta.yaml .
+          cp -f $GITHUB_WORKSPACE/managers/conda/recipe/${{ env.PACKAGE_NAME }}/meta.yaml .
 
           # Copy package source for local build
           cp -r $GITHUB_WORKSPACE/packages/${{ env.PACKAGE_NAME }}/* .
@@ -71,7 +71,6 @@ jobs:
           sed -i.bak 's|url: file://.*|path: .|g' meta.yaml    # Use local path
           sed -i.bak '/sha256:/d' meta.yaml                    # Remove hash check for local builds
 
-          # Educational: Show what we're building
           echo "=== Final recipe (meta.yaml) ==="
           cat meta.yaml
           echo "=== Build directory contents ==="
@@ -85,11 +84,6 @@ jobs:
         run: |
           # Change to our prepared build directory
           cd $CONDA_BUILD_DIR
-
-          # Show what we're about to build
-          echo "=== Building from directory: $(pwd) ==="
-          echo "=== Recipe and source files: ==="
-          ls -la
 
           # Create output directory for built packages
           mkdir -p $GITHUB_WORKSPACE/managers/conda/dist
@@ -118,11 +112,11 @@ jobs:
           # Order matters: local channel first, then conda-forge for dependencies
           conda install -c ./dist -c conda-forge ${{ env.PACKAGE_NAME }} -y
 
-          # Test 1: Basic import functionality
-          python -c "import ${{ env.PACKAGE_NAME }}; print('✅ Package imported successfully')"
+          # Test basic import functionality
+          python -c "import ${{ env.PACKAGE_NAME }}; print('Package imported successfully')"
 
 
-      # Educational example of publishing (disabled for tutorial safety)
+      # Example of publishing (disabled for tutorial safety)
       - name: Upload to anaconda.org (TUTORIAL - DISABLED)
         # Conditions for real publishing:
         # - Only on git tags (v1.0.0, etc.) 
