@@ -5,7 +5,6 @@ name: Build Rust Extension Wheels
 
 on:
   push:
-    tags: ['rust-v*']
   workflow_dispatch:
 
 jobs:
@@ -13,26 +12,29 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
     
     steps:
-    - uses: actions/checkout@v4
-    
-    - uses: dtolnay/rust-toolchain@stable
-    
-    - uses: pypa/cibuildwheel@v2.21
-      with:
-        package-dir: packages/hello_rust
-      env:
-        CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
-        CIBW_SKIP: "*-win32 pp*"
-        CIBW_BUILD_FRONTEND: "build[uv]"
-        CIBW_TEST_COMMAND: "python -c 'from hello_rust import hello_from_rust; print(hello_from_rust(\"test\"))'"
-    
-    - uses: actions/upload-artifact@v4
-      with:
-        name: wheels-${{ matrix.os }}
-        path: ./wheelhouse/*.whl
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        # setup uv
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - uses: pypa/cibuildwheel@v2.21
+        with:
+          package-dir: packages/hello_rust
+        env:
+          CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
+          CIBW_SKIP: "*-win32 pp*"
+          CIBW_BUILD_FRONTEND: "build[uv]"
+          CIBW_TEST_COMMAND: "python -c 'from hello_rust import hello_from_rust; print(hello_from_rust(\"test\"))'"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}
+          path: ./wheelhouse/*.whl
 
   publish:
     if: false && startsWith(github.ref, 'refs/tags/') # HACK for tutorial purposes, remove in real use
@@ -42,10 +44,10 @@ jobs:
       id-token: write
     
     steps:
-    - uses: actions/download-artifact@v4
-      with:
-        pattern: wheels-*
-        merge-multiple: true
-        path: dist/
-    
-    - uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-*
+          merge-multiple: true
+          path: dist/
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
