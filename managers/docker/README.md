@@ -7,8 +7,8 @@ Package applications in lightweight, portable containers.
 Take one of the Dockerfiles from the Python package examples, like `hello-numpy`, and use it to create a Docker container.
 ```bash
 # Build and run
-docker build -t hello-numpy .
-docker run hello-numpy
+docker build -t hello_numpy .
+docker run hello_numpy
 ```
 
 ## Why Docker?
@@ -24,14 +24,14 @@ docker run hello-numpy
 
 **Step 2:** Manual upload:
 ```bash
-docker tag hello-numpy username/hello-numpy:latest
+docker tag hello_numpy username/hello_numpy:latest
 docker login
-docker push username/hello-numpy:latest
+docker push username/hello_numpy:latest
 ```
 
 **Step 3:** Users run with:
 ```bash
-docker run username/hello-numpy:latest
+docker run username/hello_numpy:latest
 ```
 
 ## Automated Building

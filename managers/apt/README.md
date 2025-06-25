@@ -20,7 +20,7 @@ sudo apt install build-essential debhelper dh-python python3-all \
 sudo dpkg -i python3-hello-numpy_0.1.0-1_all.deb
 
 # Test it works
-hello-numpy --help
+hello_numpy --help
 python3 -c "import hello_numpy; print(hello_numpy.hello_numpy())"
 ```
 

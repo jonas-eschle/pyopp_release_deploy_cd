@@ -29,23 +29,23 @@ Before using the automated workflow, test locally:
 # Install conda-build
 mamba install conda-build anaconda-client boa conda-verify
 
-conda mambabuild hello-numpy/ --output-folder dist/conda  # needs boa, otherwise replace mambabuild -> build
+conda mambabuild hello_numpy/ --output-folder dist/conda  # needs boa, otherwise replace mambabuild -> build
 
 # Test local installation
-mamba install --use-local hello-numpy
+mamba install --use-local hello_numpy
 
 # Test the packages
 python -c "import hello_numpy; print('Works')"
-hello-numpy --help
+hello_numpy --help
 
 # Login to anaconda.org (interactive)
 anaconda login
 
 # Upload (replace with actual packages path)
-anaconda upload dist/conda/noarch/hello-numpy-0.1.0-REPLACE.conda
+anaconda upload dist/conda/noarch/hello_numpy-0.1.0-REPLACE.conda
 
 # Check it's available
-mamba search -c your-username hello-numpy
+mamba search -c your-username hello_numpy
 ```
 
 
@@ -54,7 +54,7 @@ mamba search -c your-username hello-numpy
 Users can install your package with:
 
 ```bash
-mamba install -c your-username hello-numpy
+mamba install -c your-username hello_numpy
 ```
 
 ## Troubleshooting
@@ -63,8 +63,8 @@ mamba install -c your-username hello-numpy
 
 ```bash
 # Check build output
-conda build hello-numpy --debug
+conda build hello_numpy --debug
 
 # Validate meta.yaml
-conda render hello-numpy/meta.yaml
+conda render hello_numpy/meta.yaml
 ```

@@ -11,7 +11,7 @@ make setup
 # Pure Python Package
 cd managers/pypi/hello_numpy
 pip install -e .
-hello-numpy --size 10 --seed 42
+hello_numpy --size 10 --seed 42
 
 # Rust Extension Package
 cd managers/pypi/hello_rust

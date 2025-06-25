@@ -14,11 +14,11 @@ git clone https://github.com/spack/spack.git
 
 ```bash
 # Install your packages
-spack install py-hello-numpy
+spack install py-hello_numpy
 
 # Load and test
-spack load py-hello-numpy
-hello-numpy --help
+spack load py-hello_numpy
+hello_numpy --help
 ```
 
 ## Why Spack?

@@ -21,7 +21,7 @@ git clone https://github.com/YOUR-USERNAME/staged-recipes.git
 cd staged-recipes
 
 # Checkout a new branch from main
-git checkout -b add-hello-numpy
+git checkout -b add-hello_numpy
 ```
 
 ### 2. Create Recipe Directory
@@ -33,8 +33,8 @@ Navigate to the recipes directory and create a folder for your package:
 cd recipes
 
 # Create directory for your package
-mkdir hello-numpy
-cd hello-numpy
+mkdir hello_numpy
+cd hello_numpy
 ```
 
 ### 3. Generate Recipe with Grayskull
@@ -55,10 +55,10 @@ Review the generated `meta.yaml` and make necessary adjustments:
 1. **Generate SHA256 hash** for your PyPI package:
    ```bash
    # Download source distribution from PyPI
-   pip download --no-deps --no-binary :all: hello-numpy
+   pip download --no-deps --no-binary :all: hello_numpy
 
    # Calculate SHA256
-   sha256sum hello-numpy-*.tar.gz
+   sha256sum hello_numpy-*.tar.gz
    ```
 
 2. **Update the SHA256** in meta.yaml with the calculated value
@@ -86,7 +86,7 @@ Before submitting, test your recipe locally:
 cd ../..
 
 # Build the recipe locally
-conda build recipes/hello-numpy
+conda build recipes/hello_numpy
 ```
 
 ### 6. Pre-submission Checklist
@@ -106,11 +106,11 @@ Commit your changes and create a pull request:
 
 ```bash
 # Add and commit your recipe
-git add recipes/hello-numpy/
+git add recipes/hello_numpy/
 git commit -m "Add hello-numpy recipe"
 
 # Push to your fork
-git push origin add-hello-numpy
+git push origin add-hello_numpy
 ```
 
 Create a pull request on GitHub:

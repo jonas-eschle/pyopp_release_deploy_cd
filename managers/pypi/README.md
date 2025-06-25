@@ -42,10 +42,10 @@ pipx run twine check dist/*
 pipx run twine upload --repository testpypi dist/*
 
 # Test installation from TestPyPI
-pip install --index-url https://test.pypi.org/simple/ hello-numpy
+pip install --index-url https://test.pypi.org/simple/ hello_numpy
 
 # Verify it works
-hello-numpy --version
+hello_numpy --version
 ```
 
 ### Production Publishing
@@ -55,7 +55,7 @@ hello-numpy --version
 pipx run twine upload dist/*
 
 # Users can now install with:
-# pip install hello-numpy
+# pip install hello_numpy
 ```
 
 ## Authentication Methods

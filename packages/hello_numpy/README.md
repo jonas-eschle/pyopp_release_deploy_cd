@@ -12,7 +12,7 @@ A simple example package for teaching releases, deployment, and continuous integ
 ## Installation
 
 ```bash
-pip install hello-numpy
+uv pip install hello_numpy
 ```
 
 ## Usage
@@ -33,13 +33,13 @@ array = hello_numpy(size=10, seed=42)
 
 ```bash
 # Default usage
-hello-numpy
+hello_numpy
 
 # Specify array size
-hello-numpy --size 10
+hello_numpy --size 10
 
 # Specify random seed for reproducibility
-hello-numpy --size 10 --seed 42
+hello_numpy --size 10 --seed 42
 ```
 
 ## Development

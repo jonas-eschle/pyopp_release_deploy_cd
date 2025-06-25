@@ -5,7 +5,7 @@ class PyHelloNumpy(PythonPackage):
     """Educational Python managers example."""
 
     homepage = "https://github.com/example/hello-numpy"
-    pypi = "hello-numpy/hello-numpy-0.1.0.tar.gz"
+    pypi = "hello_numpy/hello_numpy-0.1.0.tar.gz"
 
     version("0.1.0", sha256="actual-sha256-here")
 
