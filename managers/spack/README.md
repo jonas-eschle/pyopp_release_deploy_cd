@@ -13,7 +13,7 @@ git clone https://github.com/spack/spack.git
 ## Local Testing
 
 ```bash
-# Install your package
+# Install your packages
 spack install py-hello-numpy
 
 # Load and test
@@ -27,7 +27,6 @@ hello-numpy --help
 - Multiple versions simultaneously
 - Optimized builds (different compilers/flags)
 - No root access needed
-- Integrates with module systems
 
 ## Package Definition
 
@@ -58,28 +57,6 @@ spack repo add ~/my-repo
 spack install py-hello-numpy
 ```
 
-## Key Features
-
-- **Variants**: Different build options
-- **Compilers**: GCC, Clang, Intel, etc.
-- **Architectures**: CPU-specific optimizations
-- **Environments**: Reproducible software stacks
-
-## Example Usage
-
-```bash
-# Different Python versions
-spack install py-hello-numpy ^python@3.9
-spack install py-hello-numpy ^python@3.11
-
-# Different compilers
-spack install py-hello-numpy %gcc@11
-spack install py-hello-numpy %clang@14
-```
-
-## Contributing
-
-Submit packages to the main Spack repository via GitHub PR.
 
 ## Resources
 

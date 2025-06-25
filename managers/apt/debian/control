@@ -1,0 +1,16 @@
+Source: hello-numpy
+Maintainer: Tutorial Example <tutorial@example.com>
+Build-Depends: debhelper-compat (= 13),
+               dh-python,
+               python3-all,
+               pybuild-plugin-pyproject,
+               python3-hatchling,
+               python3-numpy
+Standards-Version: 4.6.2
+
+Package: python3-hello-numpy
+Architecture: all
+Depends: ${python3:Depends}, ${misc:Depends}, python3-numpy
+Description: Modern Python packaging tutorial
+ Educational example demonstrating pyproject.toml-based Debian packaging.
+ Built directly from pyproject.toml without setup.py.

@@ -2,7 +2,7 @@ from spack.package import *
 
 
 class PyHelloNumpy(PythonPackage):
-    """Educational Python packaging example."""
+    """Educational Python managers example."""
 
     homepage = "https://github.com/example/hello-numpy"
     pypi = "hello-numpy/hello-numpy-0.1.0.tar.gz"

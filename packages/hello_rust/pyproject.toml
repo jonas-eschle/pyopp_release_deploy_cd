@@ -1,0 +1,21 @@
+[build-system]
+requires = ["maturin>=1.0"]
+build-backend = "maturin"
+
+[project]
+name = "hello-rust"
+version = "0.1.0"
+description = "A simple Python package with Rust extensions"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [
+    {name = "Example Author", email = "author@example.com"},
+]
+
+[project.scripts]
+hello-rust = "hello_rust:main"
+
+[tool.maturin]
+python-source = "src"
+module-name = "hello_rust._hello_rust"
