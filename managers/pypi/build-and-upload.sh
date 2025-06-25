@@ -38,9 +38,9 @@ python -c "import hello_numpy; print('Import successful')"
 python -c "import hello_numpy; hello_numpy.hello_numpy(3, 42); print('✅ Function works')"
 
 # Test CLI if available
-if command -v hello-numpy >/dev/null 2>&1; then
+if command -v hello_numpy >/dev/null 2>&1; then
     echo "   Testing CLI command..."
-    hello-numpy --help >/dev/null && echo "✅ CLI works"
+    hello_numpy --help >/dev/null && echo "✅ CLI works"
 fi
 
 # Clean up test environment
