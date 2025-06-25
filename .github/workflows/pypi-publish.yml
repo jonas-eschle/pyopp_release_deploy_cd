@@ -32,7 +32,7 @@ jobs:
           path: dist/*
 
       - name: Check metadata
-        run: pipx run twine check dist/*
+        run: pipx run twine check packages/hello_numpy/dist/*
 
   publishtrusted:
     needs: [ dist ]
@@ -52,7 +52,7 @@ jobs:
       - name: Generate artifact attestation for sdist and wheel
         uses: actions/attest-build-provenance@v2
         with:
-          subject-path: "dist/*"
+          subject-path: "packages/hello_numpy/dist/*"
 
       - uses: pypa/gh-action-pypi-publish@release/v1
 
