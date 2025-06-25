@@ -87,14 +87,3 @@ repos:
     hooks:
       - id: validate-pyproject
         files: pyproject\.toml$
-
-  # Git hooks for better commit messages
-  - repo: https://github.com/commitizen-tools/commitizen
-    rev: v4.8.3
-    hooks:
-      - id: commitizen
-        stages: [commit-msg]
-
-
-
-
