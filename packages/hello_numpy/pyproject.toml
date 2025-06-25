@@ -18,3 +18,7 @@ dependencies = [
 
 [project.scripts]
 hello-numpy = "hello_numpy.hello:main"
+
+# Hatchling-specific configuration
+[tool.hatch.build.targets.wheel]
+packages = ["src/hello_numpy"]        # Explicitly specify package location (src layout)
