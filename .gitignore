@@ -203,3 +203,4 @@ cython_debug/
 /managers/apt/hello_numpy/
 /managers/apt/hello_rust/
 /particle/
+/managers/conda/hello-numpy/
