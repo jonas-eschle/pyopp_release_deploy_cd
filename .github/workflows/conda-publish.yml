@@ -47,8 +47,7 @@ jobs:
         run: |
           # Create source distribution from the package
           cd packages/${{ env.PACKAGE_NAME }}
-          python -m pip install build
-          python -m build --sdist
+          pipx run build --sdist
 
           # Create a temporary conda build directory
           mkdir -p /tmp/conda-build/${{ env.PACKAGE_NAME }}
