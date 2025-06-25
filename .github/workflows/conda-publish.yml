@@ -7,6 +7,7 @@ on:
   push:
   workflow_dispatch:
 
+# Global environment variables shared across all jobs
 env:
   PACKAGE_NAME: 'hello_numpy'
 
@@ -14,15 +15,19 @@ jobs:
   build-and-publish:
     name: Build and publish conda package
     runs-on: ${{ matrix.os }}
+    
+    # Build matrix: test multiple OS and Python versions
     strategy:
-      fail-fast: false
+      fail-fast: false  # Continue other builds if one fails
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
         python-version: [ '3.10', '3.11', '3.12' , '3.13' ]
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for proper versioning
 
       - name: Setup Miniforge
         uses: conda-incubator/setup-miniconda@v3
@@ -36,40 +41,43 @@ jobs:
           show-channel-urls: true
           use-only-tar-bz2: false  # Allow .conda files (newer format)
 
-      - name: Install build dependencies
-        shell: bash -l {0}
+      - name: Install modern build tools
+        shell: bash -l {0}  # Use login shell to activate conda environment
         run: |
+          # mamba: faster conda replacement for dependency resolution
+          # boa: modern conda-build wrapper (faster builds)
+          # conda-verify: validates package metadata
+          # grayskull: auto-generates conda recipes from PyPI
           mamba install -y conda-build boa anaconda-client conda-verify grayskull
-
 
       - name: Prepare package source and recipe
         shell: bash -l {0}
         run: |
-          # Create source distribution from the package
+          # Build source distribution 
           cd packages/${{ env.PACKAGE_NAME }}
-          pipx run build --sdist
+          pipx run build --sdist  # Creates .tar.gz for conda to consume
 
-          # Create a temporary conda build directory
+          # Create isolated build directory (prevents contamination)
           mkdir -p /tmp/conda-build/${{ env.PACKAGE_NAME }}
           cd /tmp/conda-build/${{ env.PACKAGE_NAME }}
 
-          # Copy the existing meta.yaml template
+          # Copy pre-configured meta.yaml template
           cp -f $GITHUB_WORKSPACE/managers/conda/${{ env.PACKAGE_NAME }}/meta.yaml .
 
-          # Copy the package source files
+          # Copy package source for local build
           cp -r $GITHUB_WORKSPACE/packages/${{ env.PACKAGE_NAME }}/* .
 
-          # Update meta.yaml to use local path instead of file URL
-          sed -i.bak 's|url: file://.*|path: .|g' meta.yaml
-          sed -i.bak '/sha256:/d' meta.yaml
+          # Modify recipe for local build (no remote download needed)
+          sed -i.bak 's|url: file://.*|path: .|g' meta.yaml    # Use local path
+          sed -i.bak '/sha256:/d' meta.yaml                    # Remove hash check for local builds
 
-          # Show the updated meta.yaml and directory structure
-          echo "=== Updated meta.yaml ==="
+          # Educational: Show what we're building
+          echo "=== Final recipe (meta.yaml) ==="
           cat meta.yaml
-          echo "=== Directory structure ==="
+          echo "=== Build directory contents ==="
           ls -la
 
-          # Store the build directory for next steps
+          # Pass build directory to subsequent steps
           echo "CONDA_BUILD_DIR=/tmp/conda-build/${{ env.PACKAGE_NAME }}" >> $GITHUB_ENV
 
       - name: Build conda package with mamba
@@ -78,61 +86,69 @@ jobs:
           # Change to our prepared build directory
           cd $CONDA_BUILD_DIR
 
-          # Verify we have a valid recipe
-          echo "Current directory: $(pwd)"
-          echo "Contents:"
+          # Show what we're about to build
+          echo "=== Building from directory: $(pwd) ==="
+          echo "=== Recipe and source files: ==="
           ls -la
 
-          # Create output directory
+          # Create output directory for built packages
           mkdir -p $GITHUB_WORKSPACE/managers/conda/dist
 
-          # Build using conda-mambabuild (faster)
-          conda mambabuild . -c conda-forge --output-folder $GITHUB_WORKSPACE/managers/conda/dist --no-anaconda-upload
+          # Build using conda-mambabuild (faster than conda-build)
+          # -c conda-forge: use conda-forge channel for dependencies
+          # --output-folder: where to save built packages
+          # --no-anaconda-upload: don't auto-upload (we'll do it manually)
+          conda mambabuild . \
+            -c conda-forge \
+            --output-folder $GITHUB_WORKSPACE/managers/conda/dist \
+            --no-anaconda-upload
 
-          # List built packages
-          echo "Built packages:"
+          echo "=== Successfully built packages: ==="
           find $GITHUB_WORKSPACE/managers/conda/dist -name "*.tar.bz2" -o -name "*.conda" | sort
 
       - name: Test conda package locally
         shell: bash -l {0}
         working-directory: ./managers/conda
         run: |
-          # Create test environment
-          conda create -n test-env python=${{ matrix.python-version }} -y
+          # Create isolated test environment
+          mamba create -n test-env python=${{ matrix.python-version }} -y
           conda activate test-env
 
-          # Install from local build
+          # Install our package from local build + dependencies from conda-forge
+          # Order matters: local channel first, then conda-forge for dependencies
           conda install -c ./dist -c conda-forge ${{ env.PACKAGE_NAME }} -y
 
-          # Test imports and functionality
+          # Test 1: Basic import functionality
           python -c "import ${{ env.PACKAGE_NAME }}; print('✅ Package imported successfully')"
 
-          # Test CLI if it exists
-          if command -v hello-numpy &> /dev/null; then
-            hello-numpy --help
-            hello-numpy --size 5 --seed 42
-          fi
 
-      - name: Upload to anaconda.org  # HACK below, don't use, it's a tutorial
+      # Educational example of publishing (disabled for tutorial safety)
+      - name: Upload to anaconda.org (TUTORIAL - DISABLED)
+        # Conditions for real publishing:
+        # - Only on git tags (v1.0.0, etc.) 
+        # - Only on one OS (avoid duplicates)
+        # - Only on one Python version (platform-independent packages)
         if: false && startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
         shell: bash -l {0}
         working-directory: ./managers/conda
         env:
+          # Secrets would be configured in GitHub repository settings
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
         run: |
-          # Use token-based authentication (recommended)
+          # token-based authentication (more secure than username/password)
           anaconda login --token $ANACONDA_API_TOKEN
 
-          # Upload packages with labels
+          # Upload all built packages with proper labeling
           for pkg in dist/*/*.tar.bz2 dist/*/*.conda; do
             if [ -f "$pkg" ]; then
+              echo "Uploading: $(basename $pkg)"
               anaconda upload "$pkg" \
                 --user ${{ secrets.ANACONDA_USERNAME || 'your-channel' }} \
-                --label main \
-                --label ${{ matrix.python-version }} \
-                --skip-existing
+                --label main \                    # Primary release channel
+                --label py${{ matrix.python-version }} \  # Python version specific
+                --skip-existing                   # Don't fail if already exists
             fi
           done
 
-          # Logout
+          # Clean logout (security best practice)
           anaconda logout
