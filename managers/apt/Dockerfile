@@ -26,3 +26,5 @@ COPY hello_numpy/ hello_numpy/
 
 RUN ./build-deb.sh
 
+# run instructions, print the output
+# docker build -t apt-builder .
