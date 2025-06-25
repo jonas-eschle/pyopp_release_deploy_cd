@@ -11,7 +11,7 @@ For the CI, add these secrets to your GitHub repository (Settings → Secrets an
 
 ### Required Secrets:
 - `ANACONDA_API_TOKEN` - Your anaconda.org API token
-- `ANACONDA_USERNAME` - Your anaconda.org username  
+- `ANACONDA_USERNAME` - Your anaconda.org username
 - `ANACONDA_PASSWORD` - Your anaconda.org password
 
 ### Getting Your API Token:

@@ -23,12 +23,12 @@ RUN echo "=== Homebrew Formula Structure ===" && \
     echo -e "\n=== Testing Package Installation ===" && \
     ./test-local.sh
 
-# Default command 
+# Default command
 CMD ["echo", "Homebrew formula validated. To build: brew install --build-from-source ./hello-numpy.rb"]
 
 # Usage instructions:
 # docker build -t homebrew-builder .
-# 
+#
 # Full installation (takes longer due to numpy compilation):
 # docker run -it homebrew-builder /bin/bash
 # brew install python@3.11

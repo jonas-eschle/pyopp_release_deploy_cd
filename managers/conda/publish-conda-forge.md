@@ -56,7 +56,7 @@ Review the generated `meta.yaml` and make necessary adjustments:
    ```bash
    # Download source distribution from PyPI
    pip download --no-deps --no-binary :all: hello-numpy
-   
+
    # Calculate SHA256
    sha256sum hello-numpy-*.tar.gz
    ```
@@ -95,7 +95,7 @@ Ensure the following before submitting:
 
 - [ ] Source code is downloadable as a single archive
 - [ ] License details are accurate
-- [ ] License file is included if required  
+- [ ] License file is included if required
 - [ ] Tests pass locally
 - [ ] Recipe follows conda-forge conventions
 - [ ] No interference with existing recipes

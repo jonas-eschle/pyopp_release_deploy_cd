@@ -11,4 +11,3 @@ COPY README.md .
 # install pipx
 RUN apt update && apt install pipx -y
 RUN pipx run build
-

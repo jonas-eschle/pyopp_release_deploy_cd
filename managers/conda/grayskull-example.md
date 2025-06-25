@@ -18,7 +18,7 @@ pipx run grayskull pypi hello_numpy/dist/*.tar.gz
 ```
 hello-numpy/
 └── meta.yaml     # Complete conda recipe
-``` 
+```
 
 or generate from PyPI directly:
 ```bash

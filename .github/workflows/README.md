@@ -20,16 +20,16 @@ gh extension install https://github.com/nektos/gh-act
 
 ```bash
 # Test PyPI workflow
-gh act workflow_dispatch -W .github/workflows/pypi-publish.yml 
+gh act workflow_dispatch -W .github/workflows/pypi-publish.yml
 
-# Test Conda workflow  
-gh act workflow_dispatch -W .github/workflows/conda-publish.yml 
+# Test Conda workflow
+gh act workflow_dispatch -W .github/workflows/conda-publish.yml
 
 # Test Docker workflow
-gh act workflow_dispatch -W .github/workflows/docker-build.yml 
+gh act workflow_dispatch -W .github/workflows/docker-build.yml
 
 # Test Rust wheels workflow
-gh act workflow_dispatch -W .github/workflows/build-wheels-rust.yml 
+gh act workflow_dispatch -W .github/workflows/build-wheels-rust.yml
 ```
 
 ## Production Setup

@@ -26,9 +26,9 @@ python3 -c "import hello_numpy; print(hello_numpy.hello_numpy())"
 
 ## What This Does
 
-✅ **Pure pyproject.toml** - No setup.py generation  
-✅ **Modern build system** - Uses PEP 517 standards  
-✅ **Debian-compliant** - Proper package structure  
+✅ **Pure pyproject.toml** - No setup.py generation
+✅ **Modern build system** - Uses PEP 517 standards
+✅ **Debian-compliant** - Proper package structure
 ✅ **Educational** - Shows modern Python packaging evolution
 
 ## Package Structure
@@ -83,7 +83,7 @@ python3 -m pip install --user build hatchling
 ## Tutorial Notes
 
 - 🎓 **Educational focus** - Tests disabled for simplicity
-- 🔧 **Modern standards** - Shows current best practices  
+- 🔧 **Modern standards** - Shows current best practices
 - 📦 **No legacy code** - Pure pyproject.toml approach
 - 🚀 **Future-proof** - Uses standard Python packaging
 

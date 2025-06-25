@@ -13,7 +13,7 @@ cd managers/pypi/hello_numpy
 pip install -e .
 hello-numpy --size 10 --seed 42
 
-# Rust Extension Package  
+# Rust Extension Package
 cd managers/pypi/hello_rust
 pip install maturin
 maturin develop
@@ -38,7 +38,7 @@ make docker-test   # Test Docker containers
 Package-specific targets:
 ```bash
 make apt-build     # Build Debian package
-make pypi-build    # Build PyPI packages  
+make pypi-build    # Build PyPI packages
 make conda-build   # Build Conda package
 make homebrew-test # Test Homebrew formula
 ```
