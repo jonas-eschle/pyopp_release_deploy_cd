@@ -35,7 +35,6 @@ jobs:
           miniforge-version: latest
           miniforge-variant: Miniforge3
           activate-environment: build
-          use-mamba: ''
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
           channel-priority: strict
@@ -106,11 +105,11 @@ jobs:
         run: |
           # Create isolated test environment
           mamba create -n test-env python=${{ matrix.python-version }} -y
-          mamba activate test-env
+          conda activate test-env
 
           # Install our package from local build + dependencies from conda-forge
           # Order matters: local channel first, then conda-forge for dependencies
-          mamba install -c ./dist -c conda-forge ${{ env.PACKAGE_NAME }} -y
+          conda install -c ./dist -c conda-forge ${{ env.PACKAGE_NAME }} -y
 
           # Test basic import functionality
           python -c "import ${{ env.PACKAGE_NAME }}; print('Package imported successfully')"
