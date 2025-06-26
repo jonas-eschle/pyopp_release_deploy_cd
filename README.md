@@ -1,6 +1,6 @@
 # Python Packaging Tutorial
 
-Educational repository demonstrating Python package deployment across multiple package managers and platforms.
+Repository demonstrating Python package deployment across multiple package managers and platforms for PYOPP 2025.
 
 ## Quick Start
 

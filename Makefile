@@ -62,7 +62,8 @@ clean:
 	@rm -rf managers/apt/build
 	@rm -rf managers/homebrew/build
 	@rm -rf managers/pypi/*/dist
-	@rm -rf managers/hello_*/dist
+	@rm -rf packages/hello_*/dist
+	@rm -rf packages/hello_*/target
 	@rm -rf managers/*/*.deb
 	@rm -rf managers/*/*.buildinfo
 	@rm -rf managers/*/*.changes
