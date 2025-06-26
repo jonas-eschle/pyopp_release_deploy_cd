@@ -372,7 +372,7 @@ jobs:
   ci-summary:
     name: CI Summary
     if: always()
-    needs: [ validate, test-pypi, test-conda, test-apt, test-homebrew, test-docker, test-docker-multiplatform, test-rust, test-makefile ]
+    needs: [ validate, test-pypi, test-apt, test-homebrew, test-docker, test-docker-multiplatform, test-rust, test-makefile ]
     runs-on: ubuntu-latest
     
     steps:
@@ -380,7 +380,6 @@ jobs:
         env:
           VALIDATE_RESULT: ${{ needs.validate.result }}
           PYPI_RESULT: ${{ needs.test-pypi.result }}
-          CONDA_RESULT: ${{ needs.test-conda.result }}
           APT_RESULT: ${{ needs.test-apt.result }}
           HOMEBREW_RESULT: ${{ needs.test-homebrew.result }}
           DOCKER_RESULT: ${{ needs.test-docker.result }}
@@ -397,7 +396,6 @@ jobs:
           echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| Validation | ${VALIDATE_RESULT} |" >> $GITHUB_STEP_SUMMARY
           echo "| PyPI Tests | ${PYPI_RESULT} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Conda Tests | ${CONDA_RESULT} |" >> $GITHUB_STEP_SUMMARY
           echo "| APT Tests | ${APT_RESULT} |" >> $GITHUB_STEP_SUMMARY
           echo "| Homebrew Tests | ${HOMEBREW_RESULT} |" >> $GITHUB_STEP_SUMMARY
           echo "| Docker Tests | ${DOCKER_RESULT} |" >> $GITHUB_STEP_SUMMARY
@@ -419,7 +417,7 @@ jobs:
           # Additional info
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📋 Test Coverage" >> $GITHUB_STEP_SUMMARY
-          echo "- **Package Managers Tested:** PyPI, Conda, APT, Homebrew" >> $GITHUB_STEP_SUMMARY
+          echo "- **Package Managers Tested:** PyPI, APT, Homebrew" >> $GITHUB_STEP_SUMMARY
           echo "- **Platforms Tested:** Linux, macOS, Windows" >> $GITHUB_STEP_SUMMARY
           echo "- **Python Versions:** 3.11, 3.12" >> $GITHUB_STEP_SUMMARY
           echo "- **Docker Architectures:** amd64, arm64" >> $GITHUB_STEP_SUMMARY
