@@ -29,28 +29,23 @@ make help          # Show all available targets
 make setup         # Copy packages to manager directories
 make clean         # Remove build artifacts
 make reset         # Clean + setup
-make build-all     # Build packages for all managers
-make test-all      # Run tests for all packages
-make docker-build  # Build Docker images
-make docker-test   # Test Docker containers
-```
-
-Package-specific targets:
-```bash
-make apt-build     # Build Debian package
-make pypi-build    # Build PyPI packages
-make conda-build   # Build Conda package
-make homebrew-test # Test Homebrew formula
 ```
 
 ## Package Managers
 
-Each `managers/` directory contains examples for:
-- **PyPI**: Standard Python packages
-- **Conda**: Cross-platform binary packages
-- **APT**: Debian/Ubuntu system packages
-- **Homebrew**: macOS/Linux packages
-- **Docker**: Containerized deployment
-- **Spack**: HPC environment packages
 
-See individual README files in each manager directory for detailed instructions.
+| Package Manager | Channel | Best For | Setup Difficulty | User Installation | Authentication |
+|---|---|---|---|---|---|
+| **PyPI** | pypi.org | General Python packages | Easy | `pip install package-name` | API Token or Trusted Publisher (OIDC) |
+| **PyPI** | test.pypi.org | Testing packages | Easy | `pip install -i https://test.pypi.org/simple/ package-name` | API Token or Trusted Publisher (OIDC) |
+| **Conda** | anaconda.org | Data science, scientific computing | Medium | `conda install -c your-channel package-name` | anaconda.org login + upload |
+| **Conda** | conda-forge | Community-maintained conda packages | Easy (automated) | `conda install -c conda-forge package-name` | GitHub PR submission only |
+| **Docker** | Docker Hub | Containerized applications | Medium | `docker run username/package-name` | hub.docker.com username + access token |
+| **Docker** | GitHub Container Registry | GitHub-integrated containers | Medium | `docker run ghcr.io/username/package-name` | GitHub Personal Access Token |
+| **APT** | Ubuntu Main | Core Ubuntu packages | Hard | `sudo apt install package-name` | Ubuntu developer membership |
+| **APT** | Personal PPA | User-maintained packages | Hard | `sudo add-apt-repository ppa:user/repo && sudo apt install package-name` | launchpad.net GPG key + SSH |
+| **Homebrew** | homebrew-core | Core formulas | Medium | `brew install package-name` | GitHub fork + PR |
+| **Homebrew** | Custom Tap | User-maintained formulas | Medium | `brew tap user/repo && brew install package-name` | GitHub repository |
+| **Spack** | builtin | Built-in packages | Hard | `spack install package-name` | GitHub fork + PR |
+| **Spack** | Custom Repository | Organization packages | Hard | `spack repo add /path/to/repo && spack install package-name` | Custom repository setup |
+
