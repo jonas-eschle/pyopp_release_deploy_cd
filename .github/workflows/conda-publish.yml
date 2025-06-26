@@ -35,6 +35,7 @@ jobs:
           miniforge-version: latest
           miniforge-variant: Miniforge3
           activate-environment: build
+          use-mamba: ''
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
           channel-priority: strict
