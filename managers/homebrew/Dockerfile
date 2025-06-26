@@ -5,7 +5,6 @@ USER root
 
 # Copy formula, test script, and source packages
 COPY hello_numpy.rb /home/linuxbrew/.linuxbrew/
-COPY test-formula.sh /home/linuxbrew/.linuxbrew/
 COPY hello_numpy /home/linuxbrew/.linuxbrew/hello_numpy
 
 # Switch to linuxbrew user and set working directory
