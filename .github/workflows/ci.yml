@@ -32,12 +32,12 @@ jobs:
       packages: ${{ steps.detect.outputs.packages }}
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      
+
       - name: Validate shell scripts syntax
         run: |
           echo "Checking shell script syntax..."
@@ -45,7 +45,7 @@ jobs:
             echo "Validating: $script"
             bash -n "$script"
           done
-      
+
       - name: Validate Dockerfiles
         run: |
           echo "Checking Dockerfile syntax..."
@@ -54,14 +54,14 @@ jobs:
             echo "Validating: $dockerfile"
             grep -E "^FROM|^RUN|^COPY|^WORKDIR" "$dockerfile" > /dev/null || echo "Warning: $dockerfile may be incomplete"
           done
-      
+
       - name: Detect available packages
         id: detect
         run: |
           packages=$(ls packages/ | tr '\n' ' ')
           echo "Found packages: $packages"
           echo "packages=$packages" >> $GITHUB_OUTPUT
-      
+
       - name: Check repository structure
         run: |
           echo "## Repository Structure Check" >> $GITHUB_STEP_SUMMARY
@@ -77,8 +77,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.11', '3.12']
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        python-version: [ '3.11', '3.12' ]
         # Reduce matrix for faster CI
         exclude:
           - os: windows-latest
@@ -86,25 +86,25 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      
+
       - name: Install UV
         uses: astral-sh/setup-uv@v4
         with:
           enable-cache: true
           cache-dependency-glob: '**/pyproject.toml'
-      
+
       - name: Copy packages to PyPI manager
         run: |
           make setup
           cd managers/pypi
           cp -r ../../packages/hello_numpy . || true
           # Only test hello_numpy for CI efficiency
-      
+
       - name: Test PyPI build script
         shell: bash
         run: |
@@ -113,7 +113,7 @@ jobs:
           sed -i.bak 's/read -p.*/choice=3/' build-and-upload.sh || true
           chmod +x build-and-upload.sh
           ./build-and-upload.sh || true
-      
+
       - name: Verify packages built
         shell: bash
         run: |
@@ -184,18 +184,39 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      
+
+      - name: Install APT build dependencies
+        run: |
+          sudo apt-get update
+          # Install all required build dependencies
+          sudo apt-get install -y \
+            build-essential \
+            debhelper \
+            devscripts \
+            dh-python \
+            python3-all \
+            python3-setuptools \
+            python3-pip \
+            python3-hatchling \
+            python3-numpy \
+            pybuild-plugin-pyproject \
+            lintian \
+            fakeroot
+          
+          # Check debhelper version (should be >= 13)
+          dpkg -l debhelper
+
       - name: Copy packages to APT manager
         run: |
           cp -r packages/hello_numpy managers/apt/
-      
+
       - name: Test APT build script
         run: |
           cd managers/apt
           chmod +x build-deb.sh
           # Run build script
           ./build-deb.sh
-      
+
       - name: Verify Debian package
         run: |
           cd managers/apt/build
@@ -206,7 +227,7 @@ jobs:
           # List package contents (first 20 lines)
           dpkg-deb --contents *.deb | head -20
           echo "✅ Debian package built successfully"
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -222,11 +243,11 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Copy packages to Homebrew manager
         run: |
           cp -r packages/hello_numpy managers/homebrew/
-      
+
       - name: Test Homebrew formula
         run: |
           cd managers/homebrew
@@ -247,23 +268,23 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        manager: [apt, homebrew]
+        manager: [ apt, homebrew ]
         # Only test managers with Dockerfiles
     
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
           driver: docker-container
           install: true
-      
+
       - name: Prepare build context
         run: |
           # Copy packages to each manager directory
           cp -r packages/hello_numpy managers/${{ matrix.manager }}/
-      
+
       - name: Build Docker image
         uses: docker/build-push-action@v6
         with:
@@ -273,7 +294,7 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.manager }}
           cache-to: type=gha,mode=max,scope=${{ matrix.manager }}
           load: true
-      
+
       - name: Test Docker image
         run: |
           case "${{ matrix.manager }}" in
@@ -298,17 +319,17 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up QEMU for multi-arch
         uses: docker/setup-qemu-action@v3
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Copy packages
         run: |
           cp -r packages/hello_numpy managers/apt/
-      
+
       - name: Test multi-platform build
         uses: docker/build-push-action@v6
         with:
@@ -327,30 +348,30 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-      
+
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: packages/hello_rust
-      
+
       - name: Install Maturin
         run: |
           pip install maturin
-      
+
       - name: Build hello_rust package
         run: |
           cd packages/hello_rust
@@ -366,14 +387,14 @@ jobs:
           ls -la target/wheels/
           test -f target/wheels/*.whl || exit 1
           echo "✅ Rust package built successfully"
-      
+
       - name: Test Rust package installation
         run: |
           cd packages/hello_rust
           python -m venv test-env
           source test-env/bin/activate || source test-env/Scripts/activate
           pip install target/wheels/*.whl
-          python -c "import hello_rust"
+          python -c "import hello_rust" 
 
   # Job 9: Makefile operations test
   test-makefile:
@@ -383,7 +404,7 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Test Makefile targets
         run: |
           echo "Testing Makefile setup..."
@@ -401,7 +422,7 @@ jobs:
   ci-summary:
     name: CI Summary
     if: always()
-    needs: [validate, test-pypi, test-conda, test-apt, test-homebrew, test-docker, test-docker-multiplatform, test-rust, test-makefile]
+    needs: [ validate, test-pypi, test-conda, test-apt, test-homebrew, test-docker, test-docker-multiplatform, test-rust, test-makefile ]
     runs-on: ubuntu-latest
     
     steps:
