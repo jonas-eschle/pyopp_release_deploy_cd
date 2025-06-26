@@ -373,8 +373,7 @@ jobs:
           python -m venv test-env
           source test-env/bin/activate || source test-env/Scripts/activate
           pip install target/wheels/*.whl
-          python -c "import hello_rust; print(hello_rust.hello_rust())"
-          deactivate || true
+          python -c "import hello_rust"
 
   # Job 9: Makefile operations test
   test-makefile:

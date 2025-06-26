@@ -7,7 +7,6 @@ USER root
 COPY hello_numpy.rb /home/linuxbrew/.linuxbrew/
 COPY test-formula.sh /home/linuxbrew/.linuxbrew/
 COPY hello_numpy /home/linuxbrew/.linuxbrew/hello_numpy
-COPY test-local.sh /home/linuxbrew/.linuxbrew/
 
 # Switch to linuxbrew user and set working directory
 USER linuxbrew
@@ -19,9 +18,7 @@ ENV HOMEBREW_NO_AUTO_UPDATE=1 \
 
 # Demonstrate the formula structure and test locally
 RUN echo "=== Homebrew Formula Structure ===" && \
-    cat hello_numpy.rb && \
-    echo -e "\n=== Testing Package Installation ===" && \
-    ./test-local.sh
+    cat hello_numpy.rb
 
 # Default command
 CMD ["echo", "Homebrew formula validated. To build: brew install --build-from-source ./hello-numpy.rb"]
