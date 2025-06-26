@@ -11,7 +11,7 @@ RUN apt update && apt install -y \
     python3-hatchling \
     python3-numpy \
     python3-pip \
-    && pip3 install --break-system-packages hatch-vcs
+#    && pip3 install --break-system-packages hatch-vcs
 
 # Set working directory
 WORKDIR /build
