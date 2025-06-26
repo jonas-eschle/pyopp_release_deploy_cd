@@ -15,10 +15,6 @@ jobs:
   build-and-publish:
     name: Build and publish conda package
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash -l {0}  # Use login shell to activate conda environment
-
     
     # Build matrix: test multiple OS and Python versions
     strategy:
@@ -38,7 +34,6 @@ jobs:
         with:
           miniforge-version: latest
           miniforge-variant: Miniforge3
-          mamba-version: "*"
           activate-environment: build
           python-version: ${{ matrix.python-version }}
           channels: conda-forge
@@ -47,6 +42,7 @@ jobs:
           use-only-tar-bz2: false  # Allow .conda files (newer format)
 
       - name: Install modern build tools
+        shell: bash -l {0}  # Use login shell to activate conda environment
         run: |
           # mamba: faster conda replacement for dependency resolution
           # boa: modern conda-build wrapper (faster builds)
@@ -54,6 +50,7 @@ jobs:
           mamba install -y conda-build boa anaconda-client grayskull
 
       - name: Prepare package source and recipe
+        shell: bash -l {0}
         run: |
           # Build source distribution 
           cd packages/${{ env.PACKAGE_NAME }}
@@ -103,6 +100,7 @@ jobs:
           find $GITHUB_WORKSPACE/managers/conda/dist -name "*.tar.bz2" -o -name "*.conda" | sort
 
       - name: Test conda package locally
+        shell: bash -l {0}
         working-directory: ./managers/conda
         run: |
           # Create isolated test environment
@@ -124,6 +122,7 @@ jobs:
         # - Only on one OS (avoid duplicates)
         # - Only on one Python version (platform-independent packages)
         if: false && startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
+        shell: bash -l {0}
         working-directory: ./managers/conda
         env:
           # Secrets would be configured in GitHub repository settings

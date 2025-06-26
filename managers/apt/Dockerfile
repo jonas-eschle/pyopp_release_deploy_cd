@@ -10,7 +10,7 @@ RUN apt update && apt install -y \
     pybuild-plugin-pyproject \
     python3-hatchling \
     python3-numpy \
-    python3-pip \
+    python3-pip
 #    && pip3 install --break-system-packages hatch-vcs
 
 # Set working directory
