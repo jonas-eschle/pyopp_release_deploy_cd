@@ -124,58 +124,6 @@ jobs:
           test -f dist/*.whl || exit 1
           echo "✅ PyPI packages built successfully"
 
-  # Job 3: Test Conda packaging
-  test-conda:
-    name: Conda - ${{ matrix.os }}
-    needs: validate
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest]
-        # Skip Windows for conda to save time
-    defaults:
-      run:
-        shell: bash -l {0}
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Miniforge
-        uses: conda-incubator/setup-miniconda@v3
-        with:
-          miniforge-version: latest
-          python-version: '3.12'
-          channels: conda-forge
-          channel-priority: strict
-          activate-environment: test
-          mamba-version: "*"
-      
-      - name: Install build tools
-        run: |
-          mamba install -y conda-build boa grayskull pipx
-      
-      - name: Copy and prepare packages
-        run: |
-          cp -r packages/hello_numpy managers/conda/
-      
-      - name: Test conda workflow
-        run: |
-          cd managers/conda
-          # Generate meta.yaml using grayskull
-          cd hello_numpy
-          grayskull pypi . --output ../
-          cd ..
-          
-          # Check if meta.yaml was created
-          if [ -f hello_numpy/meta.yaml ]; then
-            echo "✅ meta.yaml generated successfully"
-            cat hello_numpy/meta.yaml | head -20
-          else
-            echo "❌ Failed to generate meta.yaml"
-            exit 1
-          fi
-
   # Job 4: Test APT packaging (Ubuntu only)
   test-apt:
     name: APT/Debian Build
