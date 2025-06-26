@@ -256,9 +256,6 @@ jobs:
       - name: Test Homebrew formula
         run: |
           cd managers/homebrew
-          # Make test script executable
-          chmod +x test-formula.sh || true
-          
           # For CI, we'll do a simplified test
           echo "Testing Homebrew formula syntax..."
           brew audit --strict hello-numpy.rb || true
