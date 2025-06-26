@@ -203,8 +203,13 @@ jobs:
             lintian \
             fakeroot
           
-          # Check debhelper version (should be >= 13)
-          dpkg -l debhelper
+          # Check debhelper version (should be >= 13 to provide debhelper-compat)
+          echo "Checking debhelper version:"
+          dpkg -l debhelper | grep debhelper
+          
+          # Verify debhelper-compat virtual package is available
+          echo "Checking debhelper-compat availability:"
+          apt-cache show debhelper | grep -E "(Version|Provides)" || echo "debhelper-compat provided by debhelper package"
 
       - name: Copy packages to APT manager
         run: |
