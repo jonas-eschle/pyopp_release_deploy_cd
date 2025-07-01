@@ -83,7 +83,7 @@ jobs:
         exclude:
           - os: windows-latest
             python-version: '3.11'
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -93,7 +93,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install UV
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v6
         with:
           enable-cache: true
           cache-dependency-glob: '**/pyproject.toml'
@@ -129,7 +129,7 @@ jobs:
     name: APT/Debian Build
     needs: validate
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -150,11 +150,11 @@ jobs:
             pybuild-plugin-pyproject \
             lintian \
             fakeroot
-          
+
           # Check debhelper version (should be >= 13 to provide debhelper-compat)
           echo "Checking debhelper version:"
           dpkg -l debhelper | grep debhelper
-          
+
           # Verify debhelper-compat virtual package is available
           echo "Checking debhelper-compat availability:"
           apt-cache show debhelper | grep -E "(Version|Provides)" || echo "debhelper-compat provided by debhelper package"
@@ -188,12 +188,12 @@ jobs:
           path: managers/apt/build/*.deb
           retention-days: 7
 
-  # Job 5: Test Homebrew formula (macOS only) 
+  # Job 5: Test Homebrew formula (macOS only)
   test-homebrew:
     name: Homebrew Formula
     needs: validate
     runs-on: macos-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -207,7 +207,7 @@ jobs:
           # For CI, we'll do a simplified test
           echo "Testing Homebrew formula syntax..."
           brew audit --strict hello-numpy.rb || true
-          
+
           echo "✅ Homebrew formula validated"
 
   # Job 6: Test Docker builds in parallel
@@ -220,7 +220,7 @@ jobs:
       matrix:
         manager: [ apt, homebrew ]
         # Only test managers with Dockerfiles
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -266,7 +266,7 @@ jobs:
     name: Docker Multi-Arch
     needs: validate
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -329,10 +329,10 @@ jobs:
           cargo fmt --check
           cargo clippy -- -D warnings
           cargo test --release
-          
+
           # Build Python wheel with maturin
           maturin build --release
-          
+
           # Verify wheel was created
           ls -la target/wheels/
           test -f target/wheels/*.whl || exit 1
@@ -344,14 +344,14 @@ jobs:
           python -m venv test-env
           source test-env/bin/activate || source test-env/Scripts/activate
           pip install target/wheels/*.whl
-          python -c "import hello_rust" 
+          python -c "import hello_rust"
 
   # Job 9: Makefile operations test
   test-makefile:
     name: Makefile Operations
     needs: validate
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
 
@@ -359,13 +359,13 @@ jobs:
         run: |
           echo "Testing Makefile setup..."
           make setup
-          
+
           echo "Testing Makefile clean..."
           make clean
-          
+
           echo "Testing Makefile reset..."
           make reset
-          
+
           echo "✅ Makefile operations successful"
 
   # Job 10: Performance and Summary Report
@@ -374,7 +374,7 @@ jobs:
     if: always()
     needs: [ validate, test-pypi, test-apt, test-homebrew, test-docker, test-docker-multiplatform, test-rust, test-makefile ]
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Generate CI Report
         env:
@@ -389,7 +389,7 @@ jobs:
         run: |
           echo "# 📊 CI Test Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           # Job status table
           echo "## Job Results" >> $GITHUB_STEP_SUMMARY
           echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
@@ -403,7 +403,7 @@ jobs:
           echo "| Rust Tests | ${RUST_RESULT} |" >> $GITHUB_STEP_SUMMARY
           echo "| Makefile Tests | ${MAKEFILE_RESULT} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           # Overall status
           if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ]; then
             echo "## ❌ Overall Status: FAILED" >> $GITHUB_STEP_SUMMARY
@@ -413,7 +413,7 @@ jobs:
             echo "## ✅ Overall Status: PASSED" >> $GITHUB_STEP_SUMMARY
             echo "All package manager tests completed successfully!" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
           # Additional info
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📋 Test Coverage" >> $GITHUB_STEP_SUMMARY
