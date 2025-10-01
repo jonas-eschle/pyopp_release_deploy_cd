@@ -16,14 +16,14 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: dtolnay/rust-toolchain@stable
         # setup uv
       - name: Install uv
         uses: astral-sh/setup-uv@v6
 
-      - uses: pypa/cibuildwheel@v3.0.0
+      - uses: pypa/cibuildwheel@v3.2.0
         with:
           package-dir: packages/hello_rust
 
@@ -45,7 +45,7 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v5
         with:
           pattern: wheels-*
           merge-multiple: true
@@ -64,7 +64,7 @@ jobs:
 #      runs-on: ubuntu-latest
 #      if: github.event_name == 'release' && github.event.action == 'published'
 #      steps:
-#        - uses: actions/download-artifact@v4
+#        - uses: actions/download-artifact@v5
 #          with:
 #            pattern: cibw-*
 #            path: dist
