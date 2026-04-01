@@ -15,7 +15,7 @@ jobs:
   build-and-publish:
     name: Build and publish conda package
     runs-on: ${{ matrix.os }}
-    
+
     # Build matrix: test multiple OS and Python versions
     strategy:
       fail-fast: false  # Continue other builds if one fails
@@ -52,7 +52,7 @@ jobs:
       - name: Prepare package source and recipe
         shell: bash -l {0}
         run: |
-          # Build source distribution 
+          # Build source distribution
           cd packages/${{ env.PACKAGE_NAME }}
           pipx run build --sdist  # Creates .tar.gz for conda to consume
 
@@ -118,7 +118,7 @@ jobs:
       # Example of publishing (disabled for tutorial safety)
       - name: Upload to anaconda.org (TUTORIAL - DISABLED)
         # Conditions for real publishing:
-        # - Only on git tags (v1.0.0, etc.) 
+        # - Only on git tags (v1.0.0, etc.)
         # - Only on one OS (avoid duplicates)
         # - Only on one Python version (platform-independent packages)
         if: false && startsWith(github.ref, 'refs/tags/') && matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
