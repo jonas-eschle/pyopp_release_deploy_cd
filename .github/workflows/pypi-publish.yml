@@ -11,7 +11,7 @@ jobs:
   dist:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: hynek/build-and-inspect-python-package@v2
         with:
           path: packages/hello_numpy
@@ -19,14 +19,14 @@ jobs:
   distlong:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Build SDist and wheel
         run: pipx run build packages/hello_numpy
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Packages
           path: dist/*
@@ -44,13 +44,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'release' && github.event.action == 'published'
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: Packages
           path: dist
 
       - name: Generate artifact attestation for sdist and wheel
-        uses: actions/attest-build-provenance@v2
+        uses: actions/attest-build-provenance@v4
         with:
           subject-path: "packages/hello_numpy/dist/*"
 
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-latest
     if: false && github.event_name == 'release' && github.event.action == 'published'
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: Packages
           path: dist

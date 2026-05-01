@@ -25,12 +25,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0  # Full history for proper versioning
 
       - name: Setup Miniforge
-        uses: conda-incubator/setup-miniconda@v3
+        uses: conda-incubator/setup-miniconda@v4
         with:
           miniforge-version: latest
           miniforge-variant: Miniforge3
