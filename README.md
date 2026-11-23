@@ -48,4 +48,3 @@ make reset         # Clean + setup
 | **Homebrew** | Custom Tap | User-maintained formulas | Medium | `brew tap user/repo && brew install package-name` | GitHub repository |
 | **Spack** | builtin | Built-in packages | Hard | `spack install package-name` | GitHub fork + PR |
 | **Spack** | Custom Repository | Organization packages | Hard | `spack repo add /path/to/repo && spack install package-name` | Custom repository setup |
-
